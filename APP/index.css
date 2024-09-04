@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  height: 100vh;
+  width: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: "Poppins", Poppins;
+  padding: 0.5em;
+  text-align: left;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin: auto;
+}
+input[type="text"] {
+  font-family: inherit;
+  padding: 5px;
+}
+button {
+  margin: 5px 0;
+  width: fit-content;
+  padding: 10px;
+}
+button:hover {
+  cursor: pointer;
+}
+h2 {
+  width: 100%;
+  margin-top: 10px;
+}
+#predictionResult {
+  font-family: inherit;
+  width: 100%;
+}
+.form-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 5px 0;
+}
+.error {
+  padding: 10px;
+}
+.red {
+  background-color: #ef1c1cb0;
+}
+.green {
+  background-color: green;
+}

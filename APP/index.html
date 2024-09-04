@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taxi Fare Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="index.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form id="predictionForm">
+        <div class="form-section error green" id="error-form-section">
+          <p id="error"></p>
+        </div>
+        <div class="form-section">
+          <label for="tripDuration">Trip Duration (sec)</label>
+          <input type="text" id="trip_duration" name="tripDuration" required />
+        </div>
+        <div class="form-section"> 
+          <label for="distance">Distance (km)</label>
+          <input type="text" id="distance" name="distance" required />
+        </div>
+        <div class="form-section">
+          <label for="numOfPassengers">Number of passengers (0-6)</label>
+          <input
+            type="text"
+            id="num_of_passengers"
+            name="numOfPassengers"
+            required
+          />
+        </div class="form-section">
+        <div class="form-section">
+          <label for="surgeApplied"
+            >Surge Applied (0 for False, 1 for True)</label
+          >
+          <input type="text" id="surgeApplied" name="surgeApplied" required />
+        </div>
+        <button type="submit">Submit</button>
+        <h2>Fare Prediction (INR):</h2>
+        <p id="predictionResult"></p>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("predictionForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const duration = document.getElementById("trip_duration").value;
+          const distance = document.getElementById("distance").value;
+          const numOfPassengers =
+            document.getElementById("num_of_passengers").value;
+          const surgeApplied = document.getElementById("surgeApplied").value;
+          const error = document.getElementById("error")
+          const errorFormSection = document.getElementById("error-form-section");
+          const predictionResult = document.getElementById("predictionResult");
+
+          error.innerHTML = "";
+          errorFormSection.classList.remove("red");
+          errorFormSection.classList.add("green")
+      
+          const errorDetected = () => {
+            predictionResult.innerHTML = "";
+            errorFormSection.classList.remove("green");
+            errorFormSection.classList.add("red")
+          }
+
+          if(surgeApplied != 0 && surgeApplied != 1) {
+            errorDetected()
+            error.innerHTML = "Surge applied must be either 0 or 1.";
+            return;
+          }
+
+          if(numOfPassengers > 6 || numOfPassengers < 0) {
+            errorDetected()
+            error.innerHTML = "Number of passengers must be between 0 and 6.";
+            return;
+          }
+
+          const inputArray = [
+            duration,
+            distance,
+            numOfPassengers,
+            surgeApplied,
+          ]; 
+
+          // Send POST request to Flask API
+          axios
+            .post("http://127.0.0.1:5000/predict", inputArray)
+            .then(function (response) {
+              // Handle success
+              document.getElementById("predictionResult").innerText =
+                response.data.prediction;
+            })
+            .catch(function (error) {
+              // Handle error
+              console.error(error);
+              predictionResult.innerText =
+                "Error: " + error;
+            });
+        });
+    </script>
+  </body>
+</html>
